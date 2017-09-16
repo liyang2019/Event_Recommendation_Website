@@ -314,8 +314,13 @@
 			className : 'item-address'
 		});
 
-		address.innerHTML = item.address.replace(/,/g, '<br/>').replace(/\"/g,
-		'');
+//		address.innerHTML = item.address.replace(/,/g, '<br/>').replace(/\"/g,
+//		'') + "<br/>" + item.city + ", " + item.state + ", " + item.zipcode + "<br/>" + item.country;
+		address.innerHTML = item.address 
+						+ "<br/>" 
+						+ item.city
+						+ "<br/>" 
+						+ item.state
 		li.appendChild(address);
 
 		// favorite link
@@ -356,7 +361,7 @@
 		var btns = document.getElementsByClassName('main-nav-btn');
 
 		for (var i = 0; i < btns.length; i++) {
-			btns[i].className =btns[i].className.replace(/\bactive\b/, '');
+			btns[i].className = btns[i].className.replace(/\bactive\b/, '');
 		}
 
 		// active the one that has id = btnId
