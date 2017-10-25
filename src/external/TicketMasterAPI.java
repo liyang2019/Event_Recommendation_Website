@@ -31,11 +31,15 @@ public class TicketMasterAPI implements ExternalAPI{
 		String url = "http://" + API_HOST + SEARCH_PATH;
 		// Convert geo location to geo hash with a precision of 4 (+- 20km)
 		String geohash = GeoHash.encodeGeohash(lat, lon, 4);
+		String query = "";
 		if (term == null) {
 			term = DEFAULT_TERM;
+			query = String.format("apikey=%s&geoPoint=%s&keyword=%s", API_KEY, geohash, term);
+		} else {
+			term = urlEncodeHelper(term);
+//			String query = String.format("apikey=%s&geoPoint=%s&keyword=%s", API_KEY, geohash, term);
+			query = String.format("apikey=%s&geoPoint=%s&classificationName=%s", API_KEY, geohash, term);
 		}
-		term = urlEncodeHelper(term);
-		String query = String.format("apikey=%s&geoPoint=%s&keyword=%s", API_KEY, geohash, term);
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url + "?" + query).openConnection();
 			connection.setRequestMethod("GET");

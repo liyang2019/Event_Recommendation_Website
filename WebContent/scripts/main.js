@@ -16,7 +16,6 @@
 	}
 
 	// get the current geolocation
-	
 	function initGeoLocation() {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(onPositionUpdated,

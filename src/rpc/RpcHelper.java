@@ -54,7 +54,7 @@ public class RpcHelper {
 		try {
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
-			System.out.println(array);
+//			System.out.println(array);
 			out.print(array);
 			out.flush();
 			out.close();
