@@ -20,8 +20,9 @@ public class TicketMasterAPI implements ExternalAPI{
 	private static final String API_HOST = "app.ticketmaster.com";
 	private static final String SEARCH_PATH = "/discovery/v2/events.json";
 	private static final String DEFAULT_TERM = "ticket";  // no restriction
-//	private static final String API_KEY = "Jnt6QHEgL77JF2GP093dwJapLSSbAhV9"; // laioffer apikey
 	private static final String API_KEY = "rVY7IbZWzEcRGKmBGdwBG7jU3jS7kjSn";
+	
+	Set<String> nameFilter = new HashSet<>();
 
 	/**
 	 * Creates and sends a request to the TicketMaster API by term and location.
@@ -89,14 +90,36 @@ public class TicketMasterAPI implements ExternalAPI{
 	}
 	
 	/**
+	 * A method to check if event with similiar name has been added into database.
+	 * @param event the event json object.
+	 * @return if similiar has been added
+	 * @throws JSONException
+	 */
+	private boolean similiar(JSONObject event) throws JSONException {
+		// the method is implemented by checking first two words of the event name.
+		String[] fullNameSplit = getStringFieldOrNull(event, "name").split("\\s+");
+		String firstTwoWords = fullNameSplit[0];
+		if (fullNameSplit.length >= 2) {
+			firstTwoWords += " " + fullNameSplit[1];
+		}
+		if (nameFilter.add(firstTwoWords)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
 	 * Helper methods
 	 */
 	// Convert JSONArray to a list of item objects.
 	private List<Item> getItemList(JSONArray events) throws JSONException {
 		List<Item> itemList = new ArrayList<>();
-
 		for (int i = 0; i < events.length(); i++) {
 			JSONObject event = events.getJSONObject(i);
+			// If the same name event has been saved, continue
+			if (similiar(event)) {
+				continue;
+			}
 			Item.ItemBuilder builder = new Item.ItemBuilder();
 			builder.setItemId(getStringFieldOrNull(event, "id"));
 			builder.setName(getStringFieldOrNull(event, "name"));
